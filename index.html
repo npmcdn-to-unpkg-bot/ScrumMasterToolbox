@@ -4,9 +4,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="" href="style.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js" > </script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" > </script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">
+    </script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+    </script>
 </head>
 
 <body>
@@ -14,9 +15,31 @@
     <div class="container-fluid">
 
         <div class="jumbotron">
-            <h1 data-bind="text: title123">Test of the full width container!</h1>
+            <h1 data-bind="text: cat">Test of the full width container!</h1>
             <p>
                 Well hello there! <br/> Looking good!
+            </p>
+            <p>
+                
+                <form data-bind="submit: addAnimal">
+                    <legend>Form title</legend>
+                
+                    <div class="form-group">
+                        <label for="">Dodaj</label>
+                        <input type="text" class="form-control" data-bind="textInput: cat" placeholder="Input field">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                </form>
+                
+               <input type="text" data-bind="textInput: cat" />
+                <input type="submit" data-bind="click: addAnimal, event: { keyup: searchKeyUp }" value="Dodaj">
+                
+                <ul class="list-group" data-bind="foreach: array">
+                    <li class="list-group-item" data-bind="text: $data"></li>
+                </ul>
+
             </p>
         </div>
 
@@ -48,15 +71,29 @@
     </div>
 </body>
 
-        <script src="bower_components/knockout/dist/knockout.js"> </script>
-    <script>
-        var viewModel = {
-            title123: ko.observable()
-        };
-        
-        viewModel.title123("Test of knockout.js");
-        ko.applyBindings(viewModel);
-        
-    </script>
+<script src="bower_components/knockout/dist/knockout.js">
+</script>
+<script>
+    var viewModel = {
+        cat: ko.observable(),
+        array: ko.observableArray(),
+        addAnimal: function() {
+            this.array.push(this.cat());
+        }
+    };
+
+    viewModel.array.push('cat');
+    viewModel.array.push('giraffe');
+    viewModel.array.push('monkey');
+
+    viewModel.cat("Test of knockout.js");
+    ko.applyBindings(viewModel);
+
+    var searchKeyUp = function(d, e) {
+        if (e.keyCode == 13) {
+            search();
+        }
+    }
+</script>
 
 </html>
