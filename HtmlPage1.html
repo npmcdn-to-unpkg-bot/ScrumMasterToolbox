@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8" />
+
+<script type="text/javascript" src="bower_components\knockout\dist\knockout.js"></script>
+</head>
+<body>
+
+  <script>
+
+    function Group(_selected, _avaliable, _companyName, _taxId) {
+      this.companyName = _companyName;
+      this.taxId = _taxId;
+
+      this.selectedObligations = ko.observableArray(_selected);
+      this.avaliableObligations = ko.observableArray(_avaliable);
+
+      this.moveToSelected = function(obligation) {
+        this.avaliableObligations.remove(obligation);
+        this.selectedObligations.push(obligation);
+      }.bind(this);
+
+      this.moveToavaliable = function (obligation) {
+        this.selectedObligations.remove(obligation);
+        this.avaliableObligations.push(obligation);
+      }.bind(this);
+
+      this.SelectedArrearsSum = ko.computed(function () {
+        var sum = 0;
+        for (var i=0; i < this.selectedObligations().length; i++) {
+          sum += this.selectedObligations()[i].arrears;
+        }
+        return sum;
+      }, this);
+
+      this.AvaliableArrearsSum = ko.computed(function () {
+        var sum = 0;
+        for (var i = 0; i < this.avaliableObligations().length; i++) {
+          sum += this.avaliableObligations()[i].arrears;
+        }
+        return sum;
+      }, this);
+    }
+
+    function MyViewModel(initData) {
+      this.groups = ko.observableArray([]);
+
+      for (var i = 0; i < initData.groups.length; i++) {
+        this.groups.push(new Group(initData.groups[i].selectedObligations, initData.groups[i].avaliableObligations, initData.groups[i].companyName, initData.groups[i].taxId));
+      }
+    }
+
+
+    var initData = {
+      invalidObligations:
+        [
+        { documentNumber: "aaa", companyName: "bbb", totalAmount: 1253.56, arrears: 342.00, dueDate: "2014-05-05", daysOverdue: 3, currency: "PLN" },
+        { documentNumber: "ccc", companyName: "ddd", totalAmount: 1233.00, arrears: 42.40, dueDate: "2014-06-06", daysOverdue: 4, currency: "PLN" },
+        { documentNumber: "eee", companyName: "fff", totalAmount: 12.50, arrears: 3332.04, dueDate: "2014-07-02", daysOverdue: 5, currency: "PLN" },
+        { documentNumber: "ggg", companyName: "hhhh", totalAmount: 1023.06, arrears: 34.42, dueDate: "2014-12-15", daysOverdue: 6, currency: "PLN" }
+        ],
+      groups: [
+        {
+          companyName: "Fajna nazwa firmy 1",
+          taxId: "1231231231",
+          selectedObligations: [
+            { documentNumber: "zzz1", currency: "PLN", totalAmount: 1324.55, arrears: 4345.79, dueDate: "2015-06-01", daysOverdue: 3, uniqueId: "3fd6a5ae-13d0-483a-8db9-92d52f7aff31" },
+            { documentNumber: "zzz2", currency: "PLN", totalAmount: 2324.55, arrears: 3345.79, dueDate: "2015-06-02", daysOverdue: 4, uniqueId: "3fd6a5ae-13d0-483a-8db9-92d52f7aff32" },
+            { documentNumber: "zzz3", currency: "PLN", totalAmount: 3324.55, arrears: 2345.79, dueDate: "2015-06-03", daysOverdue: 5, uniqueId: "3fd6a5ae-13d0-483a-8db9-92d52f7aff33" },
+            { documentNumber: "zzz4", currency: "PLN", totalAmount: 4324.55, arrears: 1345.79, dueDate: "2015-06-04", daysOverdue: 6, uniqueId: "3fd6a5ae-13d0-483a-8db9-92d52f7aff34" }
+          ],
+          avaliableObligations: [
+            { documentNumber: "yyy1", currency: "PLN", totalAmount: 324.55, arrears: 445.79, dueDate: "2015-02-11", daysOverdue: 31, uniqueId: "3fd6a5ae-13d0-483a-8db9-92d52f7aff35" },
+            { documentNumber: "yyy2", currency: "PLN", totalAmount: 224.55, arrears: 335.79, dueDate: "2015-03-12", daysOverdue: 42, uniqueId: "3fd6a5ae-13d0-483a-8db9-92d52f7aff36" },
+            { documentNumber: "yyy3", currency: "PLN", totalAmount: 334.55, arrears: 245.79, dueDate: "2015-04-23", daysOverdue: 53, uniqueId: "3fd6a5ae-13d0-483a-8db9-92d52f7aff37" },
+            { documentNumber: "yyy4", currency: "PLN", totalAmount: 432.55, arrears: 135.79, dueDate: "2015-07-14", daysOverdue: 64, uniqueId: "3fd6a5ae-13d0-483a-8db9-92d52f7aff38" }
+          ]
+        },
+        {
+          companyName: "Fajna nazwa firmy 2",
+          taxId: "321321321",
+          selectedObligations: [
+            { documentNumber: "111", currency: "PLN", totalAmount: 1324.55, arrears: 4345.79, dueDate: "2015-06-01", daysOverdue: 3, uniqueId: "4fd6a5ae-13d0-483a-8db9-92d52f7aff31" },
+            { documentNumber: "222", currency: "PLN", totalAmount: 2324.55, arrears: 3345.79, dueDate: "2015-06-02", daysOverdue: 4, uniqueId: "5fd6a5ae-13d0-483a-8db9-92d52f7aff32" },
+            { documentNumber: "333", currency: "PLN", totalAmount: 3324.55, arrears: 2345.79, dueDate: "2015-06-03", daysOverdue: 5, uniqueId: "6fd6a5ae-13d0-483a-8db9-92d52f7aff33" },
+            { documentNumber: "444", currency: "PLN", totalAmount: 4324.55, arrears: 1345.79, dueDate: "2015-06-04", daysOverdue: 6, uniqueId: "7fd6a5ae-13d0-483a-8db9-92d52f7aff34" }
+          ],
+          avaliableObligations: [
+            { documentNumber: "555", currency: "PLN", totalAmount: 324.55, arrears: 445.79, dueDate: "2015-02-11", daysOverdue: 31, uniqueId: "gfd6a5ae-13d0-483a-8db9-92d52f7aff35" },
+            { documentNumber: "666", currency: "PLN", totalAmount: 224.55, arrears: 335.79, dueDate: "2015-03-12", daysOverdue: 42, uniqueId: "hfd6a5ae-13d0-483a-8db9-92d52f7aff36" },
+            { documentNumber: "777", currency: "PLN", totalAmount: 334.55, arrears: 245.79, dueDate: "2015-04-23", daysOverdue: 53, uniqueId: "jfd6a5ae-13d0-483a-8db9-92d52f7aff37" },
+            { documentNumber: "888", currency: "PLN", totalAmount: 432.55, arrears: 135.79, dueDate: "2015-07-14", daysOverdue: 64, uniqueId: "kfd6a5ae-13d0-483a-8db9-92d52f7aff38" }
+          ]
+        }
+      ]
+    };
+
+  </script>
+
+  <div data-bind="foreach: groups">
+
+    <div data-bind="text: companyName"></div>
+
+    <div data-bind="text: taxId"></div>
+
+
+    wybrane :
+    <div data-bind="visible: selectedObligations().length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Lp.</th>
+            <th>Nr dokumentu</th>
+            <th>Kwota</th>
+            <th>Pozostało do spłaty</th>
+            <th>Termin</th>
+            <th>Liczba dni opóźnienia</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody data-bind="foreach: selectedObligations">
+          <tr>
+            <td data-bind="text: $index() + 1"></td>
+            <td data-bind="text: documentNumber"></td>
+            <td><!--ko text: totalAmount--><!--/ko--> <!--ko text: currency--><!--/ko--></td>
+            <td><!--ko text: arrears--><!--/ko--> <!--ko text: currency--><!--/ko--></td>
+            <td data-bind="text: dueDate"></td>
+            <td data-bind="text: daysOverdue"></td>
+            <td><a data-bind="click: $parent.moveToavaliable" href="#"> - </a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      Suma zadłużenia:
+      <div data-bind="text: SelectedArrearsSum"></div>
+      ilość dostępnych:
+      <div data-bind="text: selectedObligations().length"></div>
+    </div>
+
+
+
+    dostępne:
+
+    <div data-bind="visible: avaliableObligations().length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Lp.</th>
+            <th>Nr dokumentu</th>
+            <th>Kwota</th>
+            <th>Pozostało do spłaty</th>
+            <th>Termin</th>
+            <th>Liczba dni opóźnienia</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody data-bind="foreach: avaliableObligations">
+          <tr>
+            <td data-bind="text: $index() + 1"></td>
+            <td data-bind="text: documentNumber"></td>
+            <td><!--ko text: totalAmount--><!--/ko--> <!--ko text: currency--><!--/ko--></td>
+            <td><!--ko text: arrears--><!--/ko--> <!--ko text: currency--><!--/ko--></td>
+            <td data-bind="text: dueDate"></td>
+            <td data-bind="text: daysOverdue"></td>
+            <td> <a data-bind="click: $parent.moveToSelected" href="#"> + </a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      Suma zadłużenia:
+      <div data-bind="text: AvaliableArrearsSum"></div>
+      ilość dostępnych:
+      <div data-bind="text: avaliableObligations().length"></div>
+    </div>
+
+
+
+
+
+
+  </div>
+
+
+  <script>
+
+    ko.applyBindings(new MyViewModel(initData));
+
+  </script>
+
+</body>
+</html>
