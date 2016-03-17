@@ -16,37 +16,6 @@ nav a {
   padding: 6px 12px;
   text-decoration: none; }
 
-.wrapper {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
-  font-weight: bold;
-  text-align: center; }
-
-.wrapper > * {
-  padding: 10px;
-  flex: 1 100%; }
-
-.header {
-  background: red; }
-
-.footer {
-  background: lightgreen; }
-
-.main {
-  text-align: left;
-  background: deepskyblue; }
-
-.aside-1 {
-  background: gold; }
-
-.aside-2 {
-  background: hotpink; }
-
 @media all and (min-width: 600px) {
   .aside {
     flex: 1 auto; } }
@@ -63,23 +32,24 @@ nav a {
   .footer {
     order: 4; } }
 
-.row .col-lg-3 {
+.grid .grid-item {
+  width: 190px;
+  background: #fff;
   min-height: 200px;
-  min-width: 50px;
-  max-width: 250px;
-  padding: 10px;
-  margin: 10px; }
+  padding: 0px 10px 5px 10px;
+  margin: 10px;
+  margin-top: 10px; }
 
-.row .col-lg-3:nth-child(4n+0) {
+.grid .grid-item:nth-child(4n+0) {
   background-color: #f2ece4; }
 
-.row .col-lg-3:nth-child(4n+1) {
+.grid .grid-item:nth-child(4n+1) {
   background-color: lightgrey; }
 
-.row .col-lg-3:nth-child(4n+2) {
+.grid .grid-item:nth-child(4n+2) {
   background-color: #e1d7d2; }
 
-.row .col-lg-3:nth-child(4n+3) {
+.grid .grid-item:nth-child(4n+3) {
   background-color: #dadbdf; }
 
 .form-group :-moz-placeholder {
@@ -96,7 +66,7 @@ nav a {
   padding: 0px; }
 
 .form-group li {
-  padding: 12px;
+  padding: 6px;
   border-bottom: 1 px solid #eee;
   position: relative; }
 
@@ -108,9 +78,9 @@ nav a {
   padding: 3px; }
 
 .form-group input {
-  width: 220px;
-  height: 20px;
-  padding: 5px 8px; }
+  width: 300px;
+  height: 30px;
+  padding: 5px 7px; }
 
 .form-group textarea {
   padding: 8px;

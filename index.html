@@ -3,10 +3,13 @@
 <head>
     <title>Scrum Master Toolbox</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" >
     <link rel="stylesheet" type="" href="style.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components\bootstrap\dist\css\bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/masonry/dist/masonry.pkgd.min.js"></script>
 </head>
 
 <body>
@@ -24,111 +27,130 @@
             </p>
         </div>
 
-        <section class="addingForm">
+<!--        <section class="addingForm">
             <h1>Missing header for addingForm section</h1>
-            <form data-bind="submit: addBacklogElement">
+            <form data-bind="submit: addElement">
                 <legend></legend>
-
                 <div class="form-group">
                     <ul>
                         <li>
                             <label for="name">Nazwa: </label>
-                            <input type="text" name="name" required="required" placeholder="Nazwa elementu"></input>
+                            <input type="text" name="name" required="required" placeholder="Nazwa elementu" data-bind="value: name"></input>
                         </li>
                         <li>
                             <label for="description">Opis: </label>
-                            <textarea name="description" required="required" rows="6" cols="40"></textarea>
+                            <textarea name="description" required="required" rows="6" cols="40" data-bind="value: description"></textarea>
                         </li>
                         <li>
-                            <label for="project">Projekt: </label>
-                            
-                            <select name="project">
-                                <option value="">-- Select One --</option>
-                                <option value="Scrum">-- Scrum --</option>
-                                <option value="Impediments">-- Impediments --</option>
+                            <label for="projects">Projekt: </label>
+
+                            <select name="projects" data-bind="options: projects, optionsCaption:'Wybierz projekt...'">
                             </select>
                         </li>
                         <li>
                             <label for="tags">Tagi: </label>
-                            <input type="text" name="tags" required="required" placeholder="Wpisz tagi oddzielone przecinkiem" ></input>
+                            <input type="text" name="tags" required="required" placeholder="Wpisz tagi oddzielone przecinkiem" data-bind="textInput:tags"></input>
                         </li>
                     </ul>
-
-                    <label>Dodaj</label><input type="text" data-bind="textInput: backlogElement" placeholder="Input field">
-
                 </div>
 
-                <button type="submit" class="btn btn-primary">Dodaj</button>
-
+                <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Dodaj</button>
             </form>
-        </section>
+        </section>-->
 
-        <section class="backlogElements">
-            <h1>Missing header for backlogElements section</h1>
-            <ul class="list-group" data-bind="foreach: backlog">
-                <li class="list-group-item" data-bind="text: $data"></li>
-            </ul>
-            <div class="row">
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    .col-sm-3
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    .col-sm-3
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    .col-sm-3
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    .col-sm-3
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    .col-sm-3
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    .col-sm-3
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    .col-sm-3
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    .col-sm-3
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    .col-sm-3
+        <section class="backlog">
+            <h1>Missing header for backlog section</h1>
+
+            <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
+                <div data-bind="foreach: backlog">
+                    <div class="grid-item">
+                        <h2 data-bind="text: title"></h2>
+                        <p data-bind="text: description"></p>
+                    </div>
                 </div>
             </div>
-        </section>
-    </div>
 
-    <div class="wrapper">
-        <header class="header">Header</header>
-        <article class="main">
-            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae
-                est. Mauris placerat eleifend leo.</p>
-        </article>
-        <aside class="aside aside-1">Aside 1</aside>
-        <aside class="aside aside-2">Aside 2</aside>
-        <footer class="footer">Footer</footer>
+           <!-- <ul class="list-group" data-bind="foreach: backlog">
+                <li class="list-group-item" data-bind="text: $data"></li>
+            </ul>-->
+<!--            <div class="row">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    .col-sm-3
+                </div>
+            </div>-->
+        </section>
     </div>
 </body>
 
 <script src="bower_components/knockout/dist/knockout.js">
 </script>
 <script>
-    var viewModel = {
-        backlogElement: ko.observable(),
-        backlog: ko.observableArray(),
-        addBacklogElement: function() {
-            this.backlog.push(this.backlogElement());
-        }
+    var initialData = [{
+        title: "Polepszenie stanu wiedzy o Scrumie",
+        description: "Stan wiedzy jest strasznie słaby. Musimy coś z tym zrobić!!!",
+        projects: "",
+        tags: ""
+    }, {
+        title: "Współpraca z PO",
+        description: "Strasznie słabo z tym!",
+        projects: "",
+        tags: ""
+    }, {
+        title: "Scrum Master",
+        description: "Strasznie słabo z tym!",
+        projects: "",
+        tags: ""
+    }, {
+        title: "Daily Scrum",
+        description: "Strasznie słabo z tym!",
+        projects: "",
+        tags: ""
+    }, {
+        title: "Planowanie",
+        description: "Strasznie słabo z tym!",
+        projects: "",
+        tags: ""
+    }, {
+        title: "Rafinacja",
+        description: "Strasznie słabo z tym!",
+        projects: "",
+        tags: ""
+    }, {
+        title: "Przegląd sprintu - demo?",
+        description: "Strasznie słabo z tym!",
+        projects: "",
+        tags: ""
+    }, {
+        title: "Demotywacja w zespołach",
+        description: "Strasznie słabo z tym!",
+        projects: "",
+        tags: ""
+    }, ];
+
+    function BacklogElement(title, description, projects, tags) {
+        this.title = ko.observable(title);
+        this.description = ko.observable(description);
+        this.projects = ko.observable(projects);
+        this.tags = ko.observable(tags);
+    }
+
+    function BacklogViewModel(elements) {
+        this.backlog = ko.observableArray();
+        
+        //insert initial data
+        for(var i=0; i < elements.length; i++)
+        {
+            this.backlog.push(new BacklogElement(elements[i].title, elements[i].description, elements[i].projects, elements[i].tags));
+        }    
+        
+        this.projects = ko.observableArray(["Scrum", "Impedimenty"]);
+
+        this.addElement = function() {
+            this.backlog.push(new BacklogElement("Title", "Desc", "Scrum", "Scrum, Dupa"))
+        };
     };
 
-    viewModel.backlog.push('backlogElement');
-    viewModel.backlog.push('giraffe');
-    viewModel.backlog.push('monkey');
-
-    viewModel.backlogElement("Test of knockout.js");
-    ko.applyBindings(viewModel);
+    ko.applyBindings(new BacklogViewModel(initialData));
 </script>
 
 </html>

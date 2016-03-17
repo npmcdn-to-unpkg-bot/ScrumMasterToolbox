@@ -1,7 +1,6 @@
 {
-  "name": "WykopBacklog",
+  "name": "scrummastertoolbox",
   "version": "1.0.0",
-  "description": "",
   "main": "gulpfile.js",
   "dependencies": {
     "bower": "^1.7.7",
@@ -14,12 +13,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/immora/WykopBacklog.git"
+    "url": "git+https://github.com/immora/ScrumMasterToolbox.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/immora/WykopBacklog/issues"
+    "url": "https://github.com/immora/ScrumMasterToolbox/issues"
   },
-  "homepage": "https://github.com/immora/WykopBacklog"
+  "homepage": "https://github.com/immora/ScrumMasterToolbox",
+  "description": ""
 }
