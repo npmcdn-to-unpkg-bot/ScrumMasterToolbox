@@ -1,5 +1,8 @@
 body {
-  font: Helvetica, sans-serif; }
+  font: Helvetica, sans-serif;
+  padding: 2em;
+  background-image: url("Content/images/bg.png"); 
+  }
 
 nav ul {
   margin: 0;
@@ -61,11 +64,8 @@ nav a {
   .footer {
     order: 4; } }
 
-body {
-  padding: 2em; }
-
-.col-lg-4:nth-child(odd) {
+.row .col-lg-4:nth-child(odd) {
   background-color: #f2ece4; }
 
-.col-lg-4:nth-child(even) {
+.row .col-lg-4:nth-child(even) {
   background-color: #dadbdf; }

@@ -10,6 +10,8 @@ $iron: #dadbdf;
 
 body {
     font: $font-stack;
+    padding: 2em;
+    background-image: 'Content/images/bg.png';
 }
 
 nav {
@@ -80,14 +82,12 @@ nav {
   .footer  { order: 4; }
 }
 
-body {
-  padding: 2em; 
-}
+.row{
+    .col-lg-4:nth-child(odd) {
+        background-color: $dawn-pink;
+    }
 
-.col-lg-4:nth-child(odd) {
-    background-color: $dawn-pink;
-}
-
-.col-lg-4:nth-child(even) {
-    background-color: $iron;
+    .col-lg-4:nth-child(even) {
+        background-color: $iron;
+    }
 }
