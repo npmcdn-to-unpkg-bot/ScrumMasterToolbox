@@ -36,9 +36,14 @@ nav a {
   width: 190px;
   background: #fff;
   min-height: 200px;
+  max-height: 350px;
   padding: 0px 10px 5px 10px;
   margin: 10px;
-  margin-top: 10px; }
+  margin-top: 10px;
+  float: left;
+  border: 2px solid #333;
+  border-color: rgba(0, 0, 0, 0.5);
+  border-radius: 5px; }
 
 .grid .grid-item:nth-child(4n+0) {
   background-color: #f2ece4; }
@@ -51,6 +56,11 @@ nav a {
 
 .grid .grid-item:nth-child(4n+3) {
   background-color: #dadbdf; }
+
+.grid:after {
+  content: '';
+  display: block;
+  clear: both; }
 
 .form-group :-moz-placeholder {
   color: lightgrey; }
