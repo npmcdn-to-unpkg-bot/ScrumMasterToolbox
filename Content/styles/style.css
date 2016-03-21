@@ -1,7 +1,8 @@
 body {
   font: Helvetica, sans-serif;
   padding: 2em;
-  background-image: url("Content/images/bg.png"); }
+  background-image: url("Content/images/bg.png");
+  background-color: #dadbdf; }
 
 nav ul {
   margin: 0;
