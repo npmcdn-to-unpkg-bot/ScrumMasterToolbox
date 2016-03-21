@@ -1,7 +1,7 @@
 body {
   font: Helvetica, sans-serif;
   padding: 2em;
-  background-image: url("Content/images/bg.png"); }
+  background: #fafafa; }
 
 nav ul {
   margin: 0;
@@ -52,7 +52,7 @@ nav a {
   background-color: lightgrey; }
 
 .grid .grid-item:nth-child(4n+2) {
-  background-color: red; }
+  background-color: #fafafa; }
 
 .grid .grid-item:nth-child(4n+3) {
   background-color: #dadbdf; }
@@ -87,7 +87,7 @@ nav a {
   width: 100px;
   padding: 3px; }
 
-.form-group input {
+.form-group input, .form-group select {
   width: 300px;
   height: 30px;
   padding: 5px 7px; }

@@ -2,7 +2,7 @@ $font-stack: Helvetica, sans-serif;
 
 $padding: 6px;
 
-$red-background: red;
+$background: #fafafa;
 
 $placeholder-color: lightgrey;
 
@@ -14,7 +14,7 @@ $nebula: #d2e1dd;
 body {
     font: $font-stack;
     padding: 2em;
-    background-image: url('Content/images/bg.png');
+    background: $background;
 }
 
 nav {
@@ -70,7 +70,7 @@ nav {
     }
 
     .grid-item:nth-child(4n+2) {
-        background-color: $red-background;
+        background-color: $background;
     }
         
     .grid-item:nth-child(4n+3) {
@@ -110,7 +110,7 @@ nav {
         width: 100px;
         padding: 3px;
     }
-    input {
+    input, select {
         width: 300px;
         height: 30px;
         padding: 5px 7px;
