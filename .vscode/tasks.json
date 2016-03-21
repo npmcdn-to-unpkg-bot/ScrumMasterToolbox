@@ -1,4 +1,3 @@
-//SASS configuration
 {
     "version": "0.1.0",
     "command": "gulp",
@@ -9,6 +8,12 @@
             "isBuildCommand": true,
             "showOutput": "always",
             "isWatching": true
+        },
+        {
+            
+            "taskName": "webserver",
+            "isBuildCommand": true,
+            "showOutput": "always"
         }
     ]
 }
