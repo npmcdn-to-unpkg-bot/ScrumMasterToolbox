@@ -15,7 +15,6 @@ body {
     font: $font-stack;
     padding: 2em;
     background-image: url('Content/images/bg.png');
-    background-color: $nebula;
 }
 
 nav {
@@ -71,7 +70,7 @@ nav {
     }
 
     .grid-item:nth-child(4n+2) {
-        background-color: $wafer;
+        background-color: $red-background;
     }
         
     .grid-item:nth-child(4n+3) {

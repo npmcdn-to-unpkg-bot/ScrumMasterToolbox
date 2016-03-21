@@ -8,12 +8,6 @@
             "isBuildCommand": true,
             "showOutput": "always",
             "isWatching": true
-        },
-        {
-            
-            "taskName": "webserver",
-            "isBuildCommand": true,
-            "showOutput": "always"
         }
     ]
 }

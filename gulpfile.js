@@ -6,7 +6,8 @@ var watch = require('gulp-watch');
 var webserver = require('gulp-webserver');
 var opn = require('opn');
 
-var stylesPath = 'Content/styles/*.scss';
+var inputStylesPath = 'Content/styles/*.scss';
+var outputStylesPath = 'Content/styles/';
 
 var server = {
     host: 'localhost',
@@ -14,12 +15,9 @@ var server = {
 }
 
 gulp.task('styles', function() {
-    gulp.src(stylesPath) //take set of changed SASS files and run them
+    gulp.src(inputStylesPath) //take set of changed SASS files and run them
         .pipe(sass()) //through compiler (gulp-sass)
-        .pipe(gulp.dest('Content/styles/'))
-        .pipe(notify({
-            message: "You just got super Sassy!"
-        }))
+        .pipe(gulp.dest(outputStylesPath))
 });
 
 gulp.task('webserver', function() {
@@ -36,13 +34,8 @@ gulp.task('openbrowser', function() {
     opn('http://' + server.host + ':' + server.port);
 })
 
-
-/*gulp.task('default', function() {
-    gulp.watch(stylesPath, ['styles']);
-})*/
-
 gulp.task('watch', function() {
-    gulp.watch(stylesPath, ['styles']);
+    gulp.watch(inputStylesPath, ['styles']);
 });
 
 gulp.task('build', ['styles']);
