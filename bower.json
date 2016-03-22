@@ -1,0 +1,22 @@
+{
+  "name": "scrummastertoolbox",
+  "description": "",
+  "main": "gulpfile.js",
+  "license": "ISC",
+  "homepage": "https://github.com/immora/ScrumMasterToolbox",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-material-design": "~4.0.1",
+    "bootstrap-sass": "~3.3.6",
+    "bootstrap": "^3.3.6",
+    "knockout": "^3.4.0",
+    "masonry": "^4.0.0"
+  }
+}
