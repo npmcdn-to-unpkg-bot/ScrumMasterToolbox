@@ -3,6 +3,7 @@ $font-stack: Helvetica, sans-serif;
 $padding: 6px;
 
 $background: #fafafa;
+$background-overlayed: black;
 
 $placeholder-color: lightgrey;
 
@@ -12,9 +13,10 @@ $wafer: #e1d7d2;
 $nebula: #d2e1dd;
 
 body {
-    font: $font-stack;
+    font-family: $font-stack;
     padding: 2em;
     background: $background;
+    overflow:hidden;
 }
 
 nav {
@@ -136,8 +138,28 @@ nav {
 
 .addingForm {
     display: none;
-    margin-top: 15px;
     position: absolute;
     width: 100%;
-    z-index: 50;
+    z-index: 10000;
+    top: 17px;
+    margin-left:-320px;
+    left:50%;
+    
+    object {
+        width: 700px;
+        height: 920px;
+    }
 }
+
+.overlay{
+        background: transparent url(../images/overlay.png) repeat top left;
+        position:fixed;
+        top:0px;
+        left:0px;
+        bottom:0px;
+        right:0px;
+        width:100%;
+        // opacity:0.5;
+        z-index:9999;
+        // vertical-align: middle;
+    }

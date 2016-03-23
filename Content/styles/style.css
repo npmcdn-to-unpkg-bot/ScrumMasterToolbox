@@ -1,7 +1,8 @@
 body {
-  font: Helvetica, sans-serif;
+  font-family: Helvetica, sans-serif;
   padding: 2em;
-  background: #fafafa; }
+  background: #fafafa;
+  overflow: hidden; }
 
 nav ul {
   margin: 0;
@@ -64,7 +65,22 @@ nav a {
 
 .addingForm {
   display: none;
-  margin-top: 15px;
   position: absolute;
   width: 100%;
-  z-index: 50; }
+  z-index: 10000;
+  top: 17px;
+  margin-left: -320px;
+  left: 50%; }
+  .addingForm object {
+    width: 700px;
+    height: 920px; }
+
+.overlay {
+  background: transparent url(../images/overlay.png) repeat top left;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  width: 100%;
+  z-index: 9999; }
