@@ -3,26 +3,65 @@
 <head>
     <title>Scrum Master Toolbox</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" >
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
     <link rel="stylesheet" type="" href="Content\styles\style.css">
     <link rel="stylesheet" href="bower_components\bootstrap\dist\css\bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-material-design/dist/css/bootstrap-material-design.css">
-    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-material-design/dist/css/ripples.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components\jquery\dist\jquery.min.js"></script>
+
+    <!-- Material Design fonts -->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="bower_components\bootstrap\dist\css\bootstrap.min.css">
+    <!--<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+
+    <!-- Bootstrap Material Design -->
+    <link rel="stylesheet" type="text/css" href="Content\styles\bootstrap-material-design.css">
+    <link rel="stylesheet" type="text/css" href="Content\styles\ripples.min.css">
+    <script src="Content\scripts\material.min.js"></script>
+    <script src="Content\scripts\ripples.min.js"></script>
+
     <script src="bower_components/masonry/dist/masonry.pkgd.min.js"></script>
-    <script src="bower_components/bootstrap-material-design/dist/js/material.js"></script>
-    
+
     <script>
         $.material.init();
+
+        $(function() {
+            $('#showAddingForm').on('click', function() {
+                $('.addingForm').slideFadeToggle();
+                alert('OK!');
+                // if ($(this).hasClass('selected')) {
+                //     $(this).removeClass('selected');
+                //     alert("deselected");
+                // } else {
+                //     $(this).addClass('selected');
+                //     $('.addingForm').slideFadeToggle();
+                //     alert("selected");
+                // }
+                // return false;
+            });
+
+            $('.close').on('click', function() {
+                $('#showAddingForm').removeClass('selected');
+                return false;
+            });
+        });
+
+        $.fn.slideFadeToggle = function(easing, callback) {
+            return this.animate({
+                opacity: 'toggle',
+                height: 'toggle'
+            }, 'fast', easing, callback);
+        };
     </script>
 </head>
 
 <body>
 
     <div class="container-fluid">
-        
+
         <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
             <a class="navbar-brand" href="#">Title</a>
             <ul class="nav navbar-nav">
@@ -41,6 +80,12 @@
             <p>
                 Well sdsdaahellodasdahello there! <br/> Looking good!
             </p>
+
+            <a href="#" id="showAddingForm" class="navbar-link">Dodaj nowy element</a>
+        </div>
+
+        <div class="addingForm">
+            <object name="addingForm" type="text/html" data="form.html"></object>
         </div>
 
         <section class="backlog">
@@ -55,10 +100,10 @@
                 </div>
             </div>
 
-           <!-- <ul class="list-group" data-bind="foreach: backlog">
+            <!-- <ul class="list-group" data-bind="foreach: backlog">
                 <li class="list-group-item" data-bind="text: $data"></li>
             </ul>-->
-<!--            <div class="row">
+            <!--            <div class="row">
                 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                     .col-sm-3
                 </div>
@@ -121,13 +166,12 @@
 
     function BacklogViewModel(elements) {
         this.backlog = ko.observableArray();
-        
+
         //insert initial data
-        for(var i=0; i < elements.length; i++)
-        {
+        for (var i = 0; i < elements.length; i++) {
             this.backlog.push(new BacklogElement(elements[i].title, elements[i].description, elements[i].projects, elements[i].tags));
-        }    
-        
+        }
+
         this.projects = ko.observableArray(["Scrum", "Impedimenty"]);
 
         this.addElement = function() {

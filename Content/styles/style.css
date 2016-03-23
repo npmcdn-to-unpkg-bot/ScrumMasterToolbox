@@ -62,49 +62,9 @@ nav a {
   display: block;
   clear: both; }
 
-.form-group :-moz-placeholder {
-  color: lightgrey; }
-
-.form-group ::-webkit-input-placeholder {
-  color: lightgrey; }
-
-.form-group ul {
-  width: 750px;
-  list-style-type: none;
-  list-style-position: outside;
-  margin: 0px;
-  padding: 0px; }
-
-.form-group li {
-  padding: 6px;
-  border-bottom: 1 px solid #eee;
-  position: relative; }
-
-.form-group label {
-  display: inline-block;
-  float: left;
-  font-weight: 700;
-  width: 100px;
-  padding: 3px; }
-
-.form-group input, .form-group select {
-  width: 300px;
-  height: 30px;
-  padding: 5px 7px; }
-
-.form-group textarea {
-  padding: 8px;
-  width: 300px; }
-
-.form-group input, .form-group textarea {
-  border: 1px solid #aaa;
-  box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
-  border-radius: 2px; }
-
-.form-group input:focus, .form-group textarea:focus {
-  background: #fff;
-  border: 1px solid #555;
-  box-shadow: 0 0 3px #aaa; }
-
-.form-group button {
-  margin-left: 100px; }
+.addingForm {
+  display: none;
+  margin-top: 15px;
+  position: absolute;
+  width: 100%;
+  z-index: 50; }
