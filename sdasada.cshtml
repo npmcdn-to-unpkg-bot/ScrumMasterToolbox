@@ -1,0 +1,414 @@
+﻿@using Microsoft.Web.Mvc;
+@using Nabbi.Core.HtmlExtension
+@using Nabbi.Liliana.Web.Areas.FairPayPlus.Controllers.NegativeInformationWaitingRoom.StartArbitrationStage
+@using Nabbi.Liliana.Web.Areas.FairPayPlus.Helpers
+
+@model StartArbitrationStageViewModel
+
+<script src="@Url.ContentVersioned("~/Content/FairPayPlus/StartArbitrationStage/js/less.js")"></script>
+<script src="@Url.ContentVersioned("~/Content/FairPayPlus/StartArbitrationStage/js/StartArbitrationStageNewPreview.js")"></script>
+
+<link rel="stylesheet" type="text/css" href="~/Content/FairPayPlus/StartArbitrationStage/css/PreviewStyle.css">
+
+<script>
+  function Group(_selected, _available, _companyName, _taxId, _currency) {
+    this.companyName = _companyName;
+    this.taxId = _taxId;
+    this.currency = _currency;
+
+    this.selectedObligations = ko.observableArray(_selected);
+    this.availableObligations = ko.observableArray(_available);
+
+    this.moveToSelected = function (obligation) {
+      this.availableObligations.remove(obligation);
+      this.selectedObligations.push(obligation);
+    }.bind(this);
+
+    this.moveToAvailable = function (obligation) {
+      this.selectedObligations.remove(obligation);
+      this.availableObligations.push(obligation);
+    }.bind(this);
+
+    this.SelectedArrearsSum = ko.computed(function () {
+      var sum = 0;
+      for (var i = 0; i < this.selectedObligations().length; i++) {
+        sum += this.selectedObligations()[i].arrears;
+      }
+      return sum.toFixed(2);
+    }, this);
+
+    this.AvailableArrearsSum = ko.computed(function () {
+      var sum = 0;
+      for (var i = 0; i < this.availableObligations().length; i++) {
+        sum += this.availableObligations()[i].arrears;
+      }
+      return sum.toFixed(2);
+    }, this);
+  }
+
+  function MyViewModel(initData) {
+    this.groups = ko.observableArray([]);
+
+
+    ////binder do formatowania kwot
+    ko.bindingHandlers.formatNumberText = {
+      update: function (element, valueAccessor) {
+        var number = ko.utils.unwrapObservable(valueAccessor());
+        var formatNumber = function () {
+          return number.replace(/(\d)(?=(\d{3})+\.)/g, '$1 ');
+        }
+        ko.bindingHandlers.text.update(element, formatNumber);
+      }
+    };
+
+    //binder do formatowania dat
+    ko.bindingHandlers.formatDateText = {
+      update: function(element, valueAccessor) {
+        var date = ko.utils.unwrapObservable(valueAccessor());
+        date = new Date(date);
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString();
+        var dd  = date.getDate().toString();
+        var formatDate = function() {
+          return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+        }
+        ko.bindingHandlers.text.update(element, formatDate);
+      }
+    };
+
+    //binder do dni opóźnienia
+    ko.bindingHandlers.formatOverdueDays = {
+      update: function(element, valueAccessor) {
+        var OverdueDays = ko.utils.unwrapObservable(valueAccessor());
+        var formatOverdueDays = function() {
+          return (OverdueDays < 0) ? 0 : OverdueDays;
+        }
+        ko.bindingHandlers.text.update(element, formatOverdueDays);
+      }
+    };
+
+    //wyliczanie kwot dla spraw odrzuconych
+    this.rejectedObligations = initData.rejectedObligations;
+    this.rejectedObligationsArrearsSum = [];
+
+    for (var j = 0; j < this.rejectedObligations.length; j++) {
+      this.rejectedObligationsArrearsSum[this.rejectedObligations[j].currency] = 0;
+    }
+
+    for (var j = 0; j < this.rejectedObligations.length; j++) {
+      this.rejectedObligationsArrearsSum[this.rejectedObligations[j].currency] += this.rejectedObligations[j].arrears;
+    }
+
+    var tempSumRejected = [];
+    for (var item in this.rejectedObligationsArrearsSum) {
+      var k = { currency: item, summary: this.rejectedObligationsArrearsSum[item] };
+      if ($.inArray(k, tempSumRejected) === -1) {
+        tempSumRejected.push(k);
+      }
+    }
+    this.rejectedObligationsArrearsSum = tempSumRejected;
+
+    //wyliczanie kwot dla ogólnego podsumowania
+    this.SummaryArrears = ko.computed(function () {
+      var sum = [];
+
+      for (var x = 0; x < this.groups().length; x++) {
+        sum[this.groups()[x].currency] = 0;
+      }
+
+      for (var a = 0; a < this.groups().length; a++) {
+        for (var j = 0; j < this.groups()[a].selectedObligations().length; j++) {
+          sum[this.groups()[a].currency] += this.groups()[a].selectedObligations()[j].arrears;
+        }
+      }
+      var tempSum = [];
+      for (var item in sum) {
+        var k = { currency: item, summary: sum[item] };
+        if ($.inArray(k, tempSum) === -1 && k.summary !== 0) {
+          tempSum.push(k);
+        }
+      }
+      return tempSum;
+    }, this);
+
+    //zliczanie zaznaczonych spraw
+    this.SummarySelectedObligationsCount = ko.computed(function () {
+      var count = 0;
+      for (var a = 0; a < this.groups().length; a++) {
+        count += this.groups()[a].selectedObligations().length;
+      }
+      return count;
+    }, this);
+
+    for (var i = 0; i < initData.groups.length; i++) {
+      this.groups.push(new Group(initData.groups[i].selectedObligations, initData.groups[i].availableObligations, initData.groups[i].companyName, initData.groups[i].taxId, initData.groups[i].currency));
+    }    
+  }
+
+
+  @{var json = Newtonsoft.Json.JsonConvert.SerializeObject(Model.ViewModel);}
+
+  var initData = @Html.Raw(json);
+
+  function submitForm() {
+
+    jQuery.ajax({
+      type: "POST",
+      url: "@Url.Action("StartArbitrationStageMultiple")",
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      data: ko.toJSON(viewModel.groups()),
+      success: function (groupsToPass) { alert(groupsToPass); },
+      failure: function (errMsg) {
+        alert(errMsg);
+      }
+    });
+  }
+</script>
+
+<h2>@Html.Raw(StartArbitrationStageResources.StartArbitrationStageMultiplePreviewHeader)</h2>
+
+<span style="line-height: 5px;">@Html.Raw(StartArbitrationStageResources.StartArbitrationStageMultiplePreviewDescription) @Html.Raw(StartArbitrationStageResources.JoiningObligationsInformation)</span>
+
+<div class="startArbitrationContent">
+  <div data-bind="foreach: groups">
+    <div class="debtorContent">
+      <div class="details">
+        <div class="debtorName">
+          <span data-bind="text: companyName"></span>
+          <div id="arrowIconBlue" class="arrowIconExpand"></div>
+        </div>
+        <span>@Html.Raw(StartArbitrationStageResources.TaxId)</span><span data-bind="text: taxId"></span>
+        <div class="obligationsDetails">
+          <div class="selectedObligationsDetails">
+            <div class="detailsRow">
+              @Html.Raw(StartArbitrationStageResources.SelectedObligationsHeader)
+              <div class="green">
+                <span data-bind="text: selectedObligations().length"></span>
+              </div>
+            </div>
+            <div class="detailsRow">
+              @Html.Raw(StartArbitrationStageResources.ArrearsSum)
+              <div class="green">
+                <span data-bind="formatNumberText: SelectedArrearsSum"></span>&nbsp;
+                <div class="currency" data-bind="text: currency"></div>
+              </div>
+            </div>
+          </div>
+          <div class="additionalObligationsDetails" data-bind="visible:availableObligations().length > 0">
+            <div class="detailsRow">
+              @Html.Raw(StartArbitrationStageResources.AdditionalObligationsHeader)
+              <div class="blue">
+                <span data-bind="text: availableObligations().length"></span>
+              </div>
+            </div>
+            <div class="detailsRow">
+              @Html.Raw(StartArbitrationStageResources.ArrearsSum)
+              <div class="blue">
+                <span data-bind="formatNumberText: AvailableArrearsSum"></span>&nbsp;
+                <div class="currency" data-bind="text: currency"></div>
+              </div>
+            </div>
+          </div>
+          <div class="clear"></div>
+        </div>
+      </div>
+      <div class="gridContainer">
+        <div data-bind="visible: selectedObligations().length > 0">
+          <div class="gridHeader">@Html.Raw(StartArbitrationStageResources.SelectedObligationsHeader)</div>
+          <table class="selectedObligationsGrid">
+            <thead>
+            <tr>
+              <th>@Html.Raw(StartArbitrationStageResources.OrdinalTableHeader)</th>
+              <th>@Html.Raw(StartArbitrationStageResources.DocumentNumberTableHeader)</th>
+              <th>@Html.Raw(StartArbitrationStageResources.AmountTableHeader)</th>
+              <th>@Html.Raw(StartArbitrationStageResources.ArrearsTableHeader)</th>
+              <th>@Html.Raw(StartArbitrationStageResources.DueDateTableHeader)</th>
+              <th style="width: 50px;">@Html.Raw(StartArbitrationStageResources.DaysOverdueTableHeader)</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: selectedObligations">
+            <tr>
+              <td data-bind="text: $index() + 1"></td>
+              <td class="documentNumberCell" data-bind="text: documentNumber"></td>
+              <td class="amountCell"> <span data-bind="formatNumberText: totalAmount.toFixed(2)"></span>&nbsp;<span class="currency" data-bind="text: $parent.currency"></span></td>
+              <td class="amountCell"> <span data-bind="formatNumberText: arrears.toFixed(2)"></span>&nbsp;<span class="currency" data-bind="text: $parent.currency"></span></td>
+              <td class="dateCell" data-bind="formatDateText: dueDate"></td>
+              <td data-bind="formatOverdueDays: daysOverdue"></td>
+              <td data-bind="click: $parent.moveToAvailable">
+                <div class="removeButton"></div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div data-bind="visible: availableObligations().length > 0">
+          <div class="gridHeader">
+            @Html.Raw(StartArbitrationStageResources.AdditionalObligationsGridHeader)
+          </div>
+          <table class="additionalObligationsGrid">
+            <thead>
+            <tr>
+              <th>@Html.Raw(StartArbitrationStageResources.OrdinalTableHeader)</th>
+              <th>@Html.Raw(StartArbitrationStageResources.DocumentNumberTableHeader)</th>
+              <th>@Html.Raw(StartArbitrationStageResources.AmountTableHeader)</th>
+              <th>@Html.Raw(StartArbitrationStageResources.ArrearsTableHeader)</th>
+              <th>@Html.Raw(StartArbitrationStageResources.DueDateTableHeader)</th>
+              <th style="width: 50px;">@Html.Raw(StartArbitrationStageResources.DaysOverdueTableHeader)</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: availableObligations">
+            <tr>
+              <td data-bind="text: $index() + 1"></td>
+              <td class="documentNumberCell" data-bind="text: documentNumber"></td>
+              <td class="amountCell"> <span data-bind="formatNumberText: totalAmount.toFixed(2)"></span>&nbsp;<span class="currency" data-bind="text: $parent.currency"></span></td>
+              <td class="amountCell"> <span data-bind="formatNumberText: arrears.toFixed(2)"></span>&nbsp;<span class="currency" data-bind="text: $parent.currency"></span></td>
+              <td class="dateCell" data-bind="formatDateText: dueDate"></td>
+              <td data-bind="formatOverdueDays: daysOverdue"></td>
+              <td data-bind="click: $parent.moveToSelected">
+                <div class="addButton"></div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @*Section with rejected obligations*@
+  <div class="rejectedObligationsContent" id="rejectedObligations" data-bind="visible: rejectedObligations.length > 0">
+    <div class="rejectedDetails">
+      <div class="rejectedObligationsHeader">
+        <div>
+          @Html.Raw(StartArbitrationStageResources.RejectedObligationsHeader)
+          @Html.HelpIcon(TooltipResourceKeysEnum.ContractorOnePolishAddresRequired)
+        </div>
+        <div id="arrowIconRed" class="arrowIconExpand"></div>
+      </div>
+      <div class="obligationsDetails">
+        <div class="selectedObligationsDetails">
+          <div class="detailsRow">
+            @Html.Raw(StartArbitrationStageResources.SelectedObligationsHeader)
+            <div class="red" data-bind="text: rejectedObligations.length">
+            </div>
+          </div>
+          <div class="detailsRow">
+            @Html.Raw(StartArbitrationStageResources.ArrearsSum)
+            <div class="red" data-bind="foreach: rejectedObligationsArrearsSum">
+              <div class="rejectedAmountAlign">
+                <span data-bind="formatNumberText: summary.toFixed(2)"></span>&nbsp;<span class="currency" data-bind="text: currency"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gridContainer">
+      <div class="gridHeader">
+        @Html.Raw(StartArbitrationStageResources.SelectedObligationsHeader)
+      </div>
+      <table class="rejectedObligationsGrid">
+        <thead>
+        <tr>
+          <th>@Html.Raw(StartArbitrationStageResources.OrdinalTableHeader)</th>
+          <th>@Html.Raw(StartArbitrationStageResources.CompanyNameTableHeader)</th>
+          <th>@Html.Raw(StartArbitrationStageResources.DocumentNumberTableHeader)</th>
+          <th>@Html.Raw(StartArbitrationStageResources.AmountTableHeader)</th>
+          <th>@Html.Raw(StartArbitrationStageResources.ArrearsTableHeader)</th>
+          <th>@Html.Raw(StartArbitrationStageResources.DueDateTableHeader)</th>
+          <th style="width: 50px;">@Html.Raw(StartArbitrationStageResources.DaysOverdueTableHeader)</th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach: rejectedObligations">
+        <tr>
+          <td data-bind="text: $index() + 1"></td>
+          <td class="debtorNameCell" data-bind="text: companyName"></td>
+          <td class="documentNumberCell" data-bind="text: documentNumber"></td>
+          <td class="amountCell"> <span data-bind="formatNumberText: totalAmount.toFixed(2)"></span>&nbsp;<span class="currency" data-bind="text: currency"></span></td>
+          <td class="amountCell"> <span data-bind="formatNumberText: arrears.toFixed(2)"></span>&nbsp;<span class="currency" data-bind="text: currency"></span></td>
+          <td class="dateCell" data-bind="formatDateText: dueDate"></td>
+          <td data-bind="formatOverdueDays: daysOverdue"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="summary">
+  <div class="summaryContent">
+    <div class="summaryRow">
+      @Html.Raw(StartArbitrationStageResources.SummarySelectedObligationsHeader)
+      <div class="summaryAmount" data-bind="visible: SummarySelectedObligationsCount() > 0">
+        <div class="summaryAmount" data-bind="text: SummarySelectedObligationsCount"></div>
+      </div>
+      <div class="summaryAmount" data-bind="visible: SummarySelectedObligationsCount() == 0">
+        <span class="summaryAmount">-</span>
+      </div>
+      </div>
+    <div class="summaryRow last lastSummaryRow">
+      @Html.Raw(StartArbitrationStageResources.SummaryArrearsSum)
+      <div class="summaryAmount" data-bind="foreach: SummaryArrears">
+        <div class="summaryRowAlign">
+          <span class="summaryAmountAlign" data-bind="formatNumberText: summary.toFixed(2)"></span>&nbsp;<span class="summaryCurrencyAlign" data-bind="text: currency"></span>
+        </div>
+      </div>
+      <div class="summaryAmount" data-bind="visible: SummarySelectedObligationsCount() == 0">
+        <div class="summaryRowAlign">
+          <span class="summaryAmountAlign">-</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="clear"></div>
+
+<div class="startArbitrationQuestion" data-bind="visible: SummarySelectedObligationsCount() > 0">
+  @using (Html.BeginActionForm(FormMethod.Post, new { enctype = "multipart/form-data" }))
+  {
+    @Html.HiddenFor(m => m.ReturnUrl)
+
+    <p>@Html.Raw(StartArbitrationStageResources.StartArbitrationStageMultiplePreviewQuestion)</p>
+
+      @(new MvcHtmlString(Html.ButtonList().Buttons(button =>
+      {
+        button.Add<StartArbitrationStageController>(x => x.Back(string.Empty), ButtonTypes.NO, new { @class = "actionButtonsCancel" }).AlwaysEnabled();
+        //button.Add<StartArbitrationStageController>(a => a.StartArbitrationStageMultiple(), Buttons.YES, ButtonTypes.YES, new { id = "submit-save", @class = "actionButtonsNext" }).AlwaysEnabled();
+      }).ToString()))
+
+  }
+</div>
+
+<div class="startArbitrationBack" data-bind="visible: SummarySelectedObligationsCount() == 0">
+  @using (Html.BeginActionForm(FormMethod.Post, new { enctype = "multipart/form-data" }))
+  {
+    @Html.HiddenFor(m => m.ReturnUrl)
+
+    @(new MvcHtmlString(Html.ButtonList().Buttons(button =>
+{
+  button.Add<StartArbitrationStageController>(x => x.Back(string.Empty), ButtonTypes.BACK, new { @class = "actionButtonsCancel" }).AlwaysEnabled();
+}).ToString()))
+  }
+</div>
+
+@*<a href="#" class="backToTopBtn"></a>*@
+
+<script>
+
+</script>
+
+<input type="button" value="Click" onclick="submitForm()" />
+
+<script>
+  
+  var viewModel = new MyViewModel(initData);
+
+  ko.applyBindings(viewModel);
+
+</script>
