@@ -37,6 +37,4 @@ gulp.task('watch', function() {
     gulp.watch(inputStylesPath, ['styles']);
 });
 
-gulp.task('build', ['styles']);
-
-gulp.task('default', ['build', 'webserver', 'watch', 'openbrowser']);
+gulp.task('default', ['webserver', 'watch', 'openbrowser']);
